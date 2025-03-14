@@ -5,6 +5,7 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import { Calendar } from "react-big-calendar";
 import { localizer } from "../../helpers/calendarLocalizer";
 import { getMessagesEs } from "../../helpers/getMessages";
+import { CalendarEvent } from "./components/CalendarEvent";
 
 const events = [
   {
@@ -47,6 +48,7 @@ export const CalendarPage = () => {
         style={{ height: "calc(100vh - 80px)" }}
         messages={getMessagesEs()}
         eventPropGetter={eventStyleGetter}
+        components={{ event: CalendarEvent }}
         // view={view}
         // onView={setView}
         // date={date}
