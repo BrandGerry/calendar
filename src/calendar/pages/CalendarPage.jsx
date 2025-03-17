@@ -7,24 +7,12 @@ import { localizer } from "../../helpers/calendarLocalizer";
 import { getMessagesEs } from "../../helpers/getMessages";
 import { CalendarEvent } from "./components/CalendarEvent";
 import { CalendarModal } from "./components/CalendarModal";
-
-const events = [
-  {
-    title: "Cumpleaños de brandon",
-    notes: "Hay que comprarle algo",
-    start: new Date(),
-    end: addHours(new Date(), 1),
-    bgColor: "#fafafa",
-    user: {
-      _id: "123",
-      name: "Brand",
-    },
-  },
-];
+import { useUiStore } from "../../hooks/useUiStore";
+import { useCalendarStore } from "../../hooks/useCalendarStore";
 
 export const CalendarPage = () => {
-  // const [view, setView] = useState(Views.MONTH);
-  // const [date, setDate] = useState(new Date());
+  const { openDateModal } = useUiStore();
+  const { events } = useCalendarStore();
   const [lastView, setLastView] = useState(
     localStorage.getItem("lastView") || "week"
   );
@@ -42,6 +30,7 @@ export const CalendarPage = () => {
   };
 
   const onDoubleClick = (event) => {
+    openDateModal();
     console.log("hulk", { double: event });
   };
 
