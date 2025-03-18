@@ -33,12 +33,17 @@ export const useCalendarStore = () => {
     dispatch(onDeleteEvent());
   };
 
+  const hasEventSelected = () => {
+    if (activeEvent && activeEvent.title !== "") return true;
+    else return false;
+  };
+
   return {
     events,
     activeEvent,
     setActiveEvent,
     startSavingEvent,
     startDeletingEvent,
-    hasEventSelected: !!activeEvent,
+    hasEventSelected,
   };
 };
