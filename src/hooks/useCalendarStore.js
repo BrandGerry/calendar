@@ -5,11 +5,13 @@ import {
   onSetActiveEvent,
   onUpdateEvent,
 } from "../store/calendar/calendarSlice";
+import calendarApi from "../api/calendarApi";
 
 //CUSTUM HOOK PARA ADMINISTRAR TODO EL STORE DE UI ME AHORRO OCUPAR EL USEDISPATCH Y EL SELECTOR EN TODOS LOS ARCHIVOS
 export const useCalendarStore = () => {
   const dispatch = useDispatch();
   const { events, activeEvent } = useSelector((state) => state.calendar);
+  const { user } = useSelector((state) => state.auth);
 
   const setActiveEvent = (calendarEvent) => {
     dispatch(onSetActiveEvent(calendarEvent));
@@ -24,7 +26,8 @@ export const useCalendarStore = () => {
       dispatch(onUpdateEvent({ ...calendarEvent }));
     } else {
       // Creando
-      dispatch(onAddNewEvent({ ...calendarEvent, _id: new Date().getTime() }));
+      const { data } = await calendarApi.post("/events", calendarEvent);
+      dispatch(onAddNewEvent({ ...calendarEvent, id: data.evento.id, user }));
     }
   };
 
