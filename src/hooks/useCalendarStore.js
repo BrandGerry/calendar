@@ -6,6 +6,7 @@ import {
   onUpdateEvent,
 } from "../store/calendar/calendarSlice";
 import calendarApi from "../api/calendarApi";
+import { convertEventsToDateEvents } from "../helpers/convertEventsToDateEvents";
 
 //CUSTUM HOOK PARA ADMINISTRAR TODO EL STORE DE UI ME AHORRO OCUPAR EL USEDISPATCH Y EL SELECTOR EN TODOS LOS ARCHIVOS
 export const useCalendarStore = () => {
@@ -41,12 +42,23 @@ export const useCalendarStore = () => {
     else return false;
   };
 
+  const startLoadingEvents = async () => {
+    try {
+      const { data } = await calendarApi.get("/events");
+      const events = convertEventsToDateEvents(data.eventos);
+      console.log("events", events);
+    } catch (error) {
+      console.log("ERROR CARGANDO EVENTOS", error);
+    }
+  };
+
   return {
     events,
     activeEvent,
-    setActiveEvent,
-    startSavingEvent,
-    startDeletingEvent,
     hasEventSelected,
+    setActiveEvent,
+    startDeletingEvent,
+    startLoadingEvents,
+    startSavingEvent,
   };
 };
