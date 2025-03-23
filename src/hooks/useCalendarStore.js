@@ -8,6 +8,7 @@ import {
 } from "../store/calendar/calendarSlice";
 import calendarApi from "../api/calendarApi";
 import { convertEventsToDateEvents } from "../helpers/convertEventsToDateEvents";
+import Swal from "sweetalert2";
 
 //CUSTUM HOOK PARA ADMINISTRAR TODO EL STORE DE UI ME AHORRO OCUPAR EL USEDISPATCH Y EL SELECTOR EN TODOS LOS ARCHIVOS
 export const useCalendarStore = () => {
@@ -20,22 +21,32 @@ export const useCalendarStore = () => {
   };
 
   const startSavingEvent = async (calendarEvent) => {
-    // TODO: llegar al backend
+    try {
+      if (calendarEvent.id) {
+        // Actualizando
+        await calendarApi.put(`/events/${calendarEvent.id}`, calendarEvent);
+        dispatch(onUpdateEvent({ ...calendarEvent, user }));
+        return;
+      }
 
-    // Todo bien
-    if (calendarEvent._id) {
-      // Actualizando
-      dispatch(onUpdateEvent({ ...calendarEvent }));
-    } else {
       // Creando
       const { data } = await calendarApi.post("/events", calendarEvent);
       dispatch(onAddNewEvent({ ...calendarEvent, id: data.evento.id, user }));
+    } catch (error) {
+      console.log(error);
+      Swal.fire("Error al guardar", error.response.data.msg, "error");
     }
   };
 
-  const startDeletingEvent = () => {
+  const startDeletingEvent = async () => {
     // Todo: Llegar al backend
-    dispatch(onDeleteEvent());
+    try {
+      await calendarApi.delete(`/events/${activeEvent.id}`);
+      dispatch(onDeleteEvent());
+    } catch (error) {
+      console.log(error);
+      Swal.fire("Error al eliminar", error.response.data.msg, "error");
+    }
   };
 
   const hasEventSelected = () => {

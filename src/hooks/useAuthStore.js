@@ -6,6 +6,7 @@ import {
   onLogin,
   onLogout,
 } from "../store/auth/authSlice";
+import { onLogoutCalendar } from "../store/calendar/calendarSlice";
 
 export const useAuthStore = () => {
   const dispatch = useDispatch();
@@ -62,6 +63,7 @@ export const useAuthStore = () => {
   const startLogout = async () => {
     localStorage.clear();
     dispatch(onLogout());
+    dispatch(onLogoutCalendar());
   };
 
   return {
